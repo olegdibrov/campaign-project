@@ -20,6 +20,7 @@ public class ServiceFactory implements IServiceFactory {
     private DepartmentService departmentService;
     private ExamService examService;
     private UniversityService universityService;
+    private RatingService ratingService;
 
 
     public static void init(DaoFactory daoFactory, IEncoder passwordEncoder){
@@ -35,11 +36,12 @@ public class ServiceFactory implements IServiceFactory {
         departmentService = new DepartmentService(daoFactory);
         examService = new ExamService(daoFactory);
         universityService = new UniversityService(daoFactory);
+        ratingService = new RatingService(daoFactory);
     }
 
     public static ServiceFactory getInstance() {
         if(instance == null) {
-            LOGGER.debug("Default init from MySQL DAO factory and sha 256 encoder");
+            LOGGER.debug("Default init from DAO factory and SHA256");
             init(DaoFactory.getInstance(), new Sha256Encoder());
         }
         return instance;
@@ -57,6 +59,10 @@ public class ServiceFactory implements IServiceFactory {
 
     public SpecialityService getSpecialityService() {
         return specialityService;
+    }
+
+    public RatingService getRatingService() {
+        return ratingService;
     }
 
     @Override

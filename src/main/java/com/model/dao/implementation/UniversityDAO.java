@@ -47,8 +47,11 @@ public class UniversityDAO extends AbstractDAO<University> {
 
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            university.setIdUniversity(resultSet.getInt(1));
-            university.setUniversityName(resultSet.getString(2));
+            while (resultSet.next()) {
+                university.setIdUniversity(resultSet.getInt(1));
+                university.setUniversityName(resultSet.getString(2));
+            }
+
         } catch (SQLException e) {
             LOGGER.error("Some problem was ocured while working with database \n" + e);
             return null;

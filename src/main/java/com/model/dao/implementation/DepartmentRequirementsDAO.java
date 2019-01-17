@@ -3,6 +3,7 @@ package com.model.dao.implementation;
 import com.model.dao.AbstractDAO;
 import com.model.entity.Department;
 import com.model.entity.DepartmentRequirements;
+import com.model.entity.University;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -13,7 +14,8 @@ public class DepartmentRequirementsDAO extends AbstractDAO<DepartmentRequirement
     private static final Logger LOGGER = Logger.getLogger(ExamDAO.class);
 
     private static final String SQL_SELECT_ALL_DEPARTMENT_REQUIREMENTS = "SELECT * FROM department_requirements";
-    private static final String SQL_INSERT_DEPARTMENT_REQUIREMENTS = "INSERT INTO department_requirements (department_idDepartment, subject_idSubject) VALUES(?,?)";
+    private static final String SQL_INSERT_DEPARTMENT_REQUIREMENTS = "INSERT INTO department_requirements (idDepartment, idSubject) VALUES(?,?)";
+    public static final String SQL_SELECT_REQUIREMENTS_FOR_DEPARTMENT = "SELECT * from department_requirements WHERE idDepartment = ?";
 
     public DepartmentRequirementsDAO(Connection connection) {
         super(connection);
@@ -41,6 +43,21 @@ public class DepartmentRequirementsDAO extends AbstractDAO<DepartmentRequirement
         }
         return null;
     }
+
+    public List<DepartmentRequirements> findRequirementsForDepartment(int idDepartment) {
+        List<DepartmentRequirements> departmentRequirements = new ArrayList<>();
+        try{
+            PreparedStatement stmt = connection.prepareStatement(SQL_SELECT_REQUIREMENTS_FOR_DEPARTMENT);
+            stmt.setInt(1, idDepartment);
+            ResultSet resultSet = stmt.executeQuery();
+            return parseSet(resultSet);
+        } catch (SQLException e) {
+            LOGGER.error("Some exception while working with database");
+            return null;
+        }
+    }
+
+
 
     @Override
     public DepartmentRequirements findEntityById(int id) {

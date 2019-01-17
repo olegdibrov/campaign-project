@@ -1,0 +1,4 @@
+com\service\implementation\TestAuthenticationService.class
+com\service\implementation\TestRegistrationService.class
+com\model\dao\implementation\TestDepartmentDAO.class
+com\model\dao\implementation\TestDepartmentRequirementsDAO.class

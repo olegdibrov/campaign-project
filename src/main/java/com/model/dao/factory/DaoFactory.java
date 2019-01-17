@@ -32,7 +32,7 @@ public class DaoFactory {
         subjectDAO = new SubjectDAO(connection);
     }
 
-    public static void init(){
+    private static void init(){
         instance = new DaoFactory();
     }
 
@@ -42,6 +42,10 @@ public class DaoFactory {
             init();
         }
         return instance;
+    }
+
+    public Connection getConnection() {
+        return connection;
     }
 
     public UserDAO getUserDao() {

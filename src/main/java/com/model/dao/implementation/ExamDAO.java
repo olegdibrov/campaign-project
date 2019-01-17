@@ -14,6 +14,11 @@ public class ExamDAO extends AbstractDAO<Exam> {
 
     private static final String SQL_SELECT_ALL_EXAM = "SELECT * FROM exam";
     private static final String SQL_INSERT_EXAM = "INSERT INTO exam (idUser, idSubject) VALUES(?,?)";
+    private static final String SQL_UPDATE_EXAM = "UPDATE exam SET idExam = ?, idUser = ?, idSubject = ?, mark = ? WHERE idExam=?";
+    private static final String SQL_SELECT_NOT_MARKED_EXAM = "SELECT * FROM exam WHERE mark is NULL";
+    private static final String SQL_FIND_EXAM_BY_ID = "SELECT * FROM exam WHERE idExam = ?";
+    private static final String SQL_FIND_EXAM_BY_USER = "SELECT * FROM exam WHERE idUser = ?";
+
 
     public ExamDAO(Connection connection) {
         super(connection);
@@ -43,8 +48,47 @@ public class ExamDAO extends AbstractDAO<Exam> {
         return null;
     }
 
+    public List<Exam> findAllNotMarkedExams() {
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(SQL_SELECT_NOT_MARKED_EXAM);
+            return parseSet(resultSet);
+        } catch (SQLException exp) {
+            LOGGER.error("Some exception while working with database");
+        }
+        return null;
+    }
+
+
     @Override
     public Exam findEntityById(int id) {
+        try {
+            PreparedStatement stmt = connection.prepareStatement(SQL_FIND_EXAM_BY_ID);
+            stmt.setInt(1, id);
+            System.out.println(stmt);
+            ResultSet resultSet = stmt.executeQuery();
+            List<Exam> exams = parseSet(resultSet);
+            if (exams.isEmpty())
+                return null;
+            else return  exams.get(0);
+        } catch (SQLException exp) {
+            LOGGER.error("Some exception while working with database");
+        }
+        return null;
+    }
+
+    public List<Exam> findExamsByUser(int idUser) {
+        try {
+            PreparedStatement stmt = connection.prepareStatement(SQL_FIND_EXAM_BY_USER);
+            stmt.setInt(1, idUser);
+            System.out.println(stmt);
+            ResultSet resultSet = stmt.executeQuery();
+            List<Exam> exams = parseSet(resultSet);
+            if (exams.isEmpty())
+                return null;
+            else return  exams;
+        } catch (SQLException exp) {
+            LOGGER.error("Some exception while working with database");
+        }
         return null;
     }
 
@@ -75,6 +119,29 @@ public class ExamDAO extends AbstractDAO<Exam> {
         }
         return true;
     }
+
+    public boolean update(Exam entity) {
+        if (entity == null) {
+            throw new IllegalArgumentException();
+        }
+
+        try{
+            PreparedStatement stmt = connection.prepareStatement(SQL_UPDATE_EXAM);
+            stmt.setInt(1, entity.getIdExam());
+            stmt.setInt(2, entity.getIdUser());
+            stmt.setInt(3, entity.getIdSubject());
+            stmt.setInt(4, entity.getMark());
+            stmt.setInt(5, entity.getIdExam());
+            System.out.println(stmt);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("Some exception while working with database");
+            return false;
+        }
+        return true;
+    }
+
+    //public void insertMark(int idUser, int idSubject)
 
     @Override
     public void close(Statement st) {

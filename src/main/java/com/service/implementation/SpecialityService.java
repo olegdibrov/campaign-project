@@ -1,18 +1,21 @@
 package com.service.implementation;
 
 import com.model.dao.factory.DaoFactory;
+import com.model.dao.implementation.SpecialityDAO;
 import com.model.entity.Speciality;
+import com.service.interfaces.ISpecialityService;
 
 import java.util.List;
 
-public class SpecialityService {
-    private DaoFactory daoFactory;
+public class SpecialityService implements ISpecialityService {
+    private SpecialityDAO specialityDAO;
 
-    public SpecialityService(DaoFactory daoFactory) {
-        this.daoFactory = daoFactory;
+    SpecialityService(DaoFactory daoFactory) {
+        specialityDAO = daoFactory.getSpecialityDAO();
     }
 
+    @Override
     public List<Speciality> getAllSpecialities() {
-        return daoFactory.getSpecialityDAO().findAll();
+        return specialityDAO.findAll();
     }
 }

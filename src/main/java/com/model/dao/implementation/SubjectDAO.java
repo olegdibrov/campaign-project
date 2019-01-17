@@ -14,6 +14,7 @@ public class SubjectDAO extends AbstractDAO<Subject> {
 
     private static final String SQL_SELECT_ALL_SUBJECTS = "SELECT * FROM subject";
     private static final String SQL_INSERT_SUBJECT = "INSERT INTO subject (subjectName) VALUES(?)";
+    private static final String SQL_SELECT_SUBJECT_BY_ID = "SELECT * FROM subject WHERE idSubject = ?";
 
     public SubjectDAO(Connection connection) {
         super(connection);
@@ -38,11 +39,26 @@ public class SubjectDAO extends AbstractDAO<Subject> {
         } catch (SQLException exp) {
             LOGGER.error("Some exception while working with database");
         }
-        return null;    }
+        return null;
+    }
 
     @Override
     public Subject findEntityById(int id) {
-        return null;
+        Subject subject = new Subject();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_SUBJECT_BY_ID);
+
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                subject.setIdSubject(resultSet.getInt(1));
+                subject.setSubjectName(resultSet.getString(2));
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Some problem while working with database");
+            return null;
+        }
+        return subject;
     }
 
     @Override

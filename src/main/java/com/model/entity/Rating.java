@@ -7,15 +7,25 @@ public class Rating implements Entity {
     private int idUser;
     private int idDepartment;
     private int rating;
+    private String status;
 
     public Rating() {
     }
 
-    public Rating(int idRating, int idUser, int idDepartment, int rating) {
+    public Rating(int idRating, int idUser, int idDepartment, int rating, String status) {
         this.idRating = idRating;
         this.idUser = idUser;
         this.idDepartment = idDepartment;
         this.rating = rating;
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public int getIdRating() {
@@ -58,12 +68,13 @@ public class Rating implements Entity {
         return idRating == rating1.idRating &&
                 idUser == rating1.idUser &&
                 idDepartment == rating1.idDepartment &&
-                rating == rating1.rating;
+                rating == rating1.rating &&
+                Objects.equals(status, rating1.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idRating, idUser, idDepartment, rating);
+        return Objects.hash(idRating, idUser, idDepartment, rating, status);
     }
 
     @Override
@@ -73,6 +84,7 @@ public class Rating implements Entity {
                 ", idUser=" + idUser +
                 ", idDepartment=" + idDepartment +
                 ", rating=" + rating +
+                ", status='" + status + '\'' +
                 '}';
     }
 }

@@ -17,6 +17,9 @@ public  abstract class AbstractDAO <T extends Entity> {
     public AbstractDAO(Connection connection) {
         this.connection = connection;
     }
+    public Connection getConnection() {
+        return connection;
+    }
     public abstract List<T> findAll();
     public abstract T findEntityById(int id);
     public abstract boolean delete(int id);

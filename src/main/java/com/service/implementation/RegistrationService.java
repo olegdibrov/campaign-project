@@ -3,20 +3,22 @@ package com.service.implementation;
 import com.model.dao.factory.DaoFactory;
 import com.model.entity.Role;
 import com.model.entity.User;
+import com.service.interfaces.IRegistrationService;
 import com.util.encoder.IEncoder;
 import org.apache.log4j.Logger;
 
-public class RegistrationService {
+public class RegistrationService implements IRegistrationService {
     private final static Logger LOGGER = Logger.getLogger(UserService.class);
 
     private DaoFactory daoFactory;
     private IEncoder encoder;
 
-    public RegistrationService(DaoFactory daoFactory, IEncoder encoder) {
+    RegistrationService(DaoFactory daoFactory, IEncoder encoder) {
         this.encoder = encoder;
         this.daoFactory = daoFactory;
     }
 
+    @Override
     public boolean register(User user) {
         String encodedPassword = encoder.encode(user.getPassword());
         user.setPassword(encodedPassword);

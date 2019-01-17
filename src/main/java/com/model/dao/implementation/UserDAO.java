@@ -1,6 +1,7 @@
 package com.model.dao.implementation;
 
 import com.model.dao.AbstractDAO;
+import com.model.entity.Rating;
 import com.model.entity.Role;
 import com.model.entity.User;
 import org.apache.log4j.Logger;
@@ -14,13 +15,15 @@ public class UserDAO extends AbstractDAO<User> {
 
     private static final String SQL_SELECT_ALL_USERS = "SELECT * FROM user";
     private static final String SQL_INSERT_USER = "INSERT INTO user (name, surname, email, password, role) VALUES(?,?,?,?,?)";
-    private static final String SQL_FIND_USER = "SELECT * FROM user WHERE email=? AND password=?";
-    private static final String SQL_FIND_BY_EMAIL = "SELECT * FROM user WHERE email=?";
+    private static final String SQL_FIND_USER = "SELECT * FROM user WHERE email = ? AND password = ?";
+    private static final String SQL_FIND_BY_EMAIL = "SELECT * FROM user WHERE email = ?";
+    private static final String SQL_FIND_USER_BY_ID = "SELECT * FROM user WHERE idUser = ?";
 
     private List<User> parseSet(ResultSet resultSet) throws SQLException {
         List<User> users = new ArrayList<>();
         while (resultSet.next()) {
             User user = new User();
+            user.setIdUser(resultSet.getInt(1));
             user.setName(resultSet.getString(2));
             user.setSurname(resultSet.getString(3));
             user.setEmail(resultSet.getString(4));
@@ -48,6 +51,17 @@ public class UserDAO extends AbstractDAO<User> {
 
     @Override
     public User findEntityById(int id) {
+        try {
+            PreparedStatement stmt = connection.prepareStatement(SQL_FIND_USER_BY_ID);
+            stmt.setInt(1, id);
+            ResultSet resultSet = stmt.executeQuery();
+            List<User> user = parseSet(resultSet);
+            if (user.isEmpty())
+                return null;
+            else return  user.get(0);
+        } catch (SQLException exp) {
+            LOGGER.error("Some exception while working with database");
+        }
         return null;
     }
 
